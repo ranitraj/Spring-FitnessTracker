@@ -38,7 +38,7 @@ Ensure you have the following installed:
    mvn spring-boot:run
    ```
 
-   The application will start and be accessible at `http://localhost:8080`.
+   The application will start and be accessible at `http://localhost:8080/workouts`.
 
 ### Accessing the H2 Database Console
 
