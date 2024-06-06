@@ -28,7 +28,7 @@ public class Workout {
             strategy = GenerationType.SEQUENCE,
             generator = "workout_sequence"
     )
-    private long id;
+    private Long id;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date workoutDate;
     @NotNull(message = "Workout type cannot be null")
@@ -36,5 +36,5 @@ public class Workout {
     @Min(value = 1, message = "Duration must be greater than 0")
     private int durationMinutes;
     @DecimalMin(value = "0.0", inclusive = false, message = "Calories burned must be greater than 0.0")
-    private int caloriesBurned;
+    private float caloriesBurned;
 }
