@@ -1,5 +1,6 @@
 package com.fitnesstracker.controller;
 
+import com.fitnesstracker.exceptions.ResourceNotFoundException;
 import com.fitnesstracker.model.Workout;
 import com.fitnesstracker.service.WorkoutService;
 import com.fitnesstracker.utils.ApiUrls;
@@ -9,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(ApiUrls.API_URL_WORKOUTS)
@@ -56,5 +58,23 @@ public class WorkoutController {
     public ResponseEntity<List<Workout>> getAllWorkouts() {
         List<Workout> workouts = workoutService.getAllWorkouts();
         return ResponseEntity.ok(workouts);
+    }
+
+    /**
+     * Updates an existing workout identified by the given ID with the provided workout details.
+     * If the workout with the specified ID does not exist, a 404 Not Found is returned.
+     *
+     * @param id The ID of the workout to update.
+     * @param workout The updated workout details.
+     * @return ResponseEntity containing the updated workout or an error message.
+     * @throws ResourceNotFoundException if no workout is found with the provided ID.
+     */
+    @PutMapping(ApiUrls.API_URL_UPDATE_WORKOUT)
+    public ResponseEntity<Workout> updateWorkout(@PathVariable Long id, @Validated @RequestBody Workout workout) {
+        return workoutService.updateWorkout(id, workout)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Workout not found with ID: " + id)
+                );
     }
 }

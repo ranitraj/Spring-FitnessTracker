@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WorkoutService {
@@ -48,5 +49,26 @@ public class WorkoutService {
      */
     public List<Workout> getAllWorkouts() {
         return workoutRepository.findAll();
+    }
+
+    /**
+     * Updates the workout with the specified ID using the provided workout details.
+     * This method first retrieves the existing workout by ID. If found, it updates the workout with the new details provided.
+     * It then saves the updated workout using the saveWorkout method.
+     *
+     * @param id The ID of the workout to update.
+     * @param updatedWorkoutDetails The updated workout details to apply.
+     * @return An Optional containing the updated workout if found, or an empty Optional otherwise.
+     */
+    public Optional<Workout> updateWorkout(Long id, Workout updatedWorkoutDetails) {
+        return workoutRepository.findById(id).map(existingWorkout -> {
+            existingWorkout.setWorkoutDate(updatedWorkoutDetails.getWorkoutDate());
+            existingWorkout.setWorkoutType(updatedWorkoutDetails.getWorkoutType());
+            existingWorkout.setDurationMinutes(updatedWorkoutDetails.getDurationMinutes());
+            existingWorkout.setCaloriesBurned(updatedWorkoutDetails.getCaloriesBurned());
+
+            // Update using the saveWorkout method in Service
+            return saveWorkout(existingWorkout);
+        });
     }
 }
