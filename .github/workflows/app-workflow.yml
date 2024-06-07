@@ -1,13 +1,9 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+# This GitHub Actions workflow performs continuous integration for the Fitness Tracker project.
+# It includes jobs to build the project and run unit tests on push or pull request events to the main branch.
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Spring Boot Fitness Tracker CI
 
-name: Java CI with Maven
-
+# Triggers the workflow on push or pull request events for the main branch
 on:
   push:
     branches: [ "main" ]
@@ -16,16 +12,41 @@ on:
 
 jobs:
   build:
-
+    # Specifies that the job should run on the latest Ubuntu version
     runs-on: ubuntu-latest
 
     steps:
+    # Checks out your repository under $GITHUB_WORKSPACE
     - uses: actions/checkout@v4
+    # Sets up a Java 17 environment using Temurin distribution
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
+        # Caches Maven dependencies and wrapper to improve build time
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Compile and Package with maven
+      # Compiles and packages your code, skipping unit tests
+      run: mvn clean package -DskipTests -B
+
+  test:
+    # Ensures that tests are only run after the build job completes successfully
+    needs: build
+    # Specifies that the job should run on the latest Ubuntu version
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out the repository again for the test job
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        # Ensures Java 17 is used for running tests
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          # Uses the Maven cache configured in the build job
+          cache: 'maven'
+      - name: Execute Unit Tests
+        # Executes the unit tests
+        run: mvn test
