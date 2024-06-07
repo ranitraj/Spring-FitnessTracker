@@ -38,7 +38,7 @@ Ensure you have the following installed:
    mvn spring-boot:run
    ```
 
-   The application will start and be accessible at `http://localhost:8080/workouts`.
+   The application will start and be accessible at `http://localhost:8080`. However, this URL won't display anything as it is not an actual API endpoint.
 
 ### Accessing the H2 Database Console
 
@@ -46,14 +46,16 @@ The H2 database console is enabled by default and can be accessed through your w
 
 1. Navigate to `http://localhost:8080/h2-console` in your browser.
 2. Use the following settings to connect:
-   - JDBC URL: `jdbc:h2:mem:booking_db`
+   - JDBC URL: `jdbc:h2:mem:workouts_db`
    - User Name: `sa`
    - Password: (leave this blank)
 3. Click **Connect** to access the database console.
 
+This configuration can be found in the `application.properties` file located in the path: `src/main/resources`
+
 ## Testing API Endpoints
 
-You can test the API endpoints using Postman or any other API testing tool by sending requests to `http://localhost:8080/bookings`. Below are sample requests for each available endpoint.
+You can test the API endpoints using Postman or any other API testing tool by sending requests to `http://localhost:8080/workouts`. Below are sample requests for each available endpoint.
 
 ### Create a New Workout
 
