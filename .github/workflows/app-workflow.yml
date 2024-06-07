@@ -50,3 +50,52 @@ jobs:
       - name: Execute Unit Tests
         # Executes the unit tests
         run: mvn test
+
+  DiffblueCover:
+    runs-on: ubuntu-latest
+    # Ensures this job only runs on pull_request events
+    if: github.event_name == 'pull_request'
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+
+    steps:
+      # Checkout the repository with permission to push
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Run Diffblue Cover
+      - name: Diffblue Cover
+        uses: diffblue/cover-github-action@main
+        env:
+          JVM_ARGS: -Xmx4096m
+        with:
+          # The access token used to push commits and call GitHub APIs.
+          #
+          # Must have access to the project with at least Write role, and scopes
+          # including code, commit-statuses, pull-requests, workflows and actions.
+          access-token: ${{ secrets.DIFFBLUE_ACCESS_UN }}
+
+          # The license key provided in your welcome email or provided by your organization.
+          # Alternatively obtain a free trial key from https://www.diffblue.com/try-cover/github.
+          license-key: ${{ secrets.DIFFBLUE_LICENSE_UN }}
+
+      # Collect Diffblue Cover outcome files
+      # This step saves Diffblue Cover run outcome files for later use. These include summary
+      # information on Diffblue Cover's results, reports files, and logs. The information
+      # contained in these files can be used for project analysis, metrics, improving analysis
+      # or troubleshooting problems.
+      # Note that this job will always run even when the Run Diffblue Cover job fails. This
+      # ensures troubleshooting logs and output are available.
+      - name: Diffblue Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: |
+            **/.diffblue/**
