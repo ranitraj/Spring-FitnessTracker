@@ -51,6 +51,40 @@ jobs:
         # Executes the unit tests
         run: mvn test
 
+  qae01:
+    runs-on: ubuntu-latest
+    environment: qae01
+    steps:
+      - name: Print qae01 variables
+        run: |
+          # show all environment variables defined in this environment
+          echo "All variables in qae01: ${{ toJSON(vars) }}"
+          # individually print known variables (replace var3/var4 with your actual names)
+          echo "production=${{ vars.PRODUCTION }}"
+          echo "domain=${{ vars.DOMAIN }}"
+          echo "cam_url=${{ vars.CAMURL }}"
+          echo "webapp_service=${{ vars.WEBAPPSERVICE }}"
+          # compute and print the URL by concatenating production and domain
+          url="${{ vars.PRODUCTION }}${{ vars.DOMAIN }}"
+          echo "url=$url"
+
+  sit01:
+    runs-on: ubuntu-latest
+    environment: sit01
+    steps:
+      - name: Print sit01 variables
+        run: |
+          # show all environment variables defined in this environment
+          echo "All variables in sit01: ${{ toJSON(vars) }}"
+          # individually print known variables (replace var3/var4 with your actual names)
+          echo "production=${{ vars.production }}"
+          echo "domain=${{ vars.domain }}"
+          echo "var3=${{ vars.camurl }}"
+          echo "var4=${{ vars.webappservice }}"
+          # compute and print the URL by concatenating production and domain
+          url="${{ vars.production }}${{ vars.domain }}"
+          echo "url=$url"
+
   DiffblueCover:
     runs-on: ubuntu-latest
     # Ensures this job only runs on pull_request events
