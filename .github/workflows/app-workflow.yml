@@ -65,7 +65,7 @@ jobs:
           echo "cam_url=${{ vars.CAMURL }}"
           echo "webapp_service=${{ vars.WEBAPPSERVICE }}"
           # compute and print the URL by concatenating production and domain
-          url="${{ vars.PRODUCTION }}${{ vars.DOMAIN }}"
+          url="http://www${{ vars.PRODUCTION }}.com/${{ vars.DOMAIN }}"
           echo "url=$url"
 
   sit01:
